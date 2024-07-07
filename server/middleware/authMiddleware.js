@@ -9,7 +9,7 @@ module.exports = function (req, res, next) {
 	try {
 		const token = req.headers.authorization.split(' ')[1];
 		if (!token) {
-			return next(ApiError.badRequest('JWT Token doesn not exist'));
+			return next(ApiError.badRequest('JWT Token does not exist'));
 		}
 		
 		const decoded = jwt.verify(token, process.env.SECRET_KEY);

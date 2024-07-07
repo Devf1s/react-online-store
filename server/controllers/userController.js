@@ -5,7 +5,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); // JSON Web Token for transmission to client
 const { validationResult } = require('express-validator');
 
-const generateJwt = (id, email, role) => {
+const jwtTokenErrorMessage = 'SECRET_KEY is not defined in the .env!';
+
+const generateJwt = (id, email, role, next) => {
+	if (!process.env.SECRET_KEY) {
+		return next(ApiError.badRequest(jwtTokenErrorMessage));
+	}
+
 	return jwt.sign(
 		{ id, email, role },
 		process.env.SECRET_KEY,
@@ -31,7 +37,7 @@ class UserController {
 			if (candidate) {
 				return next(ApiError.duplicate('User with such email already exists!'));
 			}
-
+			
 			const hashPassword = bcrypt.hashSync(password, 7);
 			const user = await User.create({ email, password: hashPassword, role });
 			const basket = await Basket.create({ userId: user.id });

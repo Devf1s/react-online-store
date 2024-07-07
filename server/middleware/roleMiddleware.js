@@ -8,7 +8,7 @@ module.exports = function (role) {
 		}
 	
 		try {
-			const token = req.headers.authorization.split(' ')[1];
+			const token = req.headers.authorization.split(' ')[1]; // "Bearer TOKEN"
 			if (!token) {
 				return next(ApiError.badRequest('JWT Token does not exist')); 
 			}
